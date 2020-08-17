@@ -2,7 +2,6 @@ package com.springboot.app.web;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.app.exception.PersonException;
 import com.springboot.app.model.Person;
+import com.springboot.app.model.Response;
 import com.springboot.app.service.PersonDetailService;
 
 @RestController
@@ -37,33 +37,40 @@ public class PersonController {
 	}
 
 	@RequestMapping(value = "/get/{personId}", method = RequestMethod.GET)
-	public ResponseEntity<Person> getPersonbyId(@PathVariable("personId") long personId) {
+	public ResponseEntity<Person> getPersonbyId(@PathVariable("personId") long personId) throws PersonException {
 		System.out.println("/get/{personId} API call");
-		return new ResponseEntity<Person>(personDetailService.getByPersonId(personId), HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/delete/{personId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Person> deletePersonbyId(@PathVariable("personId") long personId) throws Exception {
-		System.out.println("/delete/{personId} DELETE API call");
-		Person person=personDetailService.getByPersonId(personId);
-		
-		if(person!=null || person.getPersonId()<=0) {
-			throw new PersonException("Person ID does not exist");
+		ResponseEntity<Person> response = new ResponseEntity<Person>(personDetailService.getByPersonId(personId),
+				HttpStatus.OK);
+		if (response == null || response.getBody() == null) {
+			throw new PersonException("Person not present");
 		}
-		personDetailService.deletePerson(personId);
-		return new ResponseEntity<Person>(HttpStatus.OK);
-	}
-	
-	@RequestMapping(value="/update",method = RequestMethod.PATCH)
-	public ResponseEntity<Person> updatePerson(@RequestBody Person person) throws Exception{
-		System.out.println("/update API call");
-		/*
-		 * Person id=personDetailService.getByPersonId(person.getPersonId()); if(id ==
-		 * null || id.getPersonId()<=0) { throw new
-		 * PersonException("Person Id does not exist can't update"); }
-		 */
-		return new ResponseEntity<Person>(personDetailService.save(person),HttpStatus.OK);
+		return response;
 	}
 
+	@RequestMapping(value = "/delete/{personId}", method = RequestMethod.DELETE)
+	public ResponseEntity<Response> deletePersonbyId(@PathVariable("personId") long personId) throws PersonException {
+		System.out.println("/delete/{personId} DELETE API call");
+
+		Person person = personDetailService.getByPersonId(personId);
+
+		if (person == null || person.getPersonId() <= 0) {
+			throw new PersonException("Person ID does not exist");
+		}
+		personDetailService.deletePerson(person);
+		return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(), "Record has been deleted"),
+				HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/update", method = RequestMethod.PATCH)
+	public ResponseEntity<Person> updatePerson(@RequestBody Person person) throws Exception {
+		System.out.println("/update API call");
+
+		Person id = personDetailService.getByPersonId(person.getPersonId());
+		if (id == null || id.getPersonId() <= 0) {
+			throw new PersonException("Person Id does not exist can't update");
+		}
+
+		return new ResponseEntity<Person>(personDetailService.save(person), HttpStatus.OK);
+	}
 
 }

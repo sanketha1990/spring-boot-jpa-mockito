@@ -9,10 +9,20 @@ public class PersonException extends Exception {
 	private String errorMessage;
 
 	public PersonException(String errorMessage) {
+		super(errorMessage);
 		this.errorMessage = errorMessage;
 	}
 
 	public PersonException() {
 		super();
 	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+	
 }

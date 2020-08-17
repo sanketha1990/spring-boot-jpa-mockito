@@ -1,22 +1,19 @@
-package com.springboot.app.springbootjpamockito;
+package com.springboot.app;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.springboot.app.model.Person;
 import com.springboot.app.repository.PersonDetailsRepository;
 
 @SpringBootApplication
-@EntityScan("com.springboot.app.model")
-@EnableJpaRepositories("com.springboot.app.repository")
-@ComponentScan("com.springboot.app")
+//@EntityScan("com.springboot.app.model")
+//@EnableJpaRepositories("com.springboot.app.repository")
+//@ComponentScan("com.springboot.app")
 public class SpringBootJpaMockitoApplication {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SpringBootJpaMockitoApplication.class);

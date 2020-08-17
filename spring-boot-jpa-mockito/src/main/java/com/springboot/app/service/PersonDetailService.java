@@ -11,5 +11,5 @@ public interface PersonDetailService {
 
 	public Person save(Person person);
 
-	public void deletePerson(long personId);
+	public void deletePerson(Person person);
 }
